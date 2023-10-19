@@ -1,2 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using FsCheck;
+using PropertyBasedTesting;
+
+
+
+
+// This property asserts that the reverse of the reverse of a list is the list itself. 
+bool revRevIsOriginal(int[] xs) => xs.Reverse().Reverse().SequenceEqual(xs);
+var property=Prop.ForAll<int[]>(revRevIsOriginal);
+
+Check.Quick(property);
+
+Prop.ForAll<double[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs))
+    .VerboseCheck();
+
+
+
+
