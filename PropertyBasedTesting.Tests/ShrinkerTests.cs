@@ -42,7 +42,7 @@ namespace PropertyBasedTesting.Tests
            Arb.From(GenerateDateTime, CustomDateTimeShrinker);
 
         public static Arbitrary<Int32> Int() =>
-           Arb.From(GenerateIntegers, IntegerShrinker);
+           Arb.From(GenerateIntegers, CustomIntegerShrinker2);
 
 
         public static IEnumerable<Int32> IntegerShrinker(int current)
@@ -64,7 +64,19 @@ namespace PropertyBasedTesting.Tests
             }
         }
 
-       
+        public static IEnumerable<Int32> CustomIntegerShrinker2(int current)
+        {
+            var random=new System.Random();
+            var increment = random.Next(5);
+            var i = 0;
+
+            while (i < current)
+            {
+                yield return i;
+                i += increment;
+            }
+        }
+
 
         public static IEnumerable<CustomDateTime> CustomDateTimeShrinker(CustomDateTime dt)
         {
