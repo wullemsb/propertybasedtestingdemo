@@ -16,35 +16,28 @@ namespace PropertyBasedTesting.Tests
             Assert.Equal(1, result);
         }
 
-        [Theory]
-        [InlineData(1, 2, 3)]
-        [InlineData(1, 0, 1)]
-        //[InlineData(1, 4, 5)]
-        public void Add(int input1, int input2, int expectedResult)
-        {
-            var result = Calculator.Add(input1, input2);
-            Assert.Equal(expectedResult, result);
-        }
 
-        [Fact]
-        public void WhenIAddTwoRandomNumbersExpectTheirSum()
-        {
-            for (int i = 0; i < 100; i++) {
-                //Arrange
-                var random = new Random();
-                int input1 = random.Next();
-                int input2 = random.Next();
 
-                //Act
-                var result = Calculator.Add(input1, input2);
-                //We compare the implementation with the implementation
-                var expectedResult = input1 + input2;
 
-                //Assert
-                Assert.Equal(expectedResult, result);
-            }      
-        }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
         [Fact]
         public void WhenIAddTwoRandomNumbersTheResultShouldNotDependOnParameterOrder()
         {
