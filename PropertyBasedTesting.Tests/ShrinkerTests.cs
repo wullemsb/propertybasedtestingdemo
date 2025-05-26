@@ -22,9 +22,12 @@ namespace PropertyBasedTesting.Tests
 
         }
 
+        [Property]
+        public Property IntTester(int x) => (x < 81).ToProperty();
+
         //Will register all static methods that return an Arbitrary
         [Property(Arbitrary = new[] { typeof(ShrinkerTests) }, Verbose = true)]
-        public Property IntTester(int x) => (x < 81).ToProperty();
+        public Property IntTesterWithCustomShrinker(int x) => (x < 81).ToProperty();
 
 
         private static Gen<Int32> GenerateIntegers =>
@@ -43,7 +46,7 @@ namespace PropertyBasedTesting.Tests
            Arb.From(GenerateDateTime, CustomDateTimeShrinker);
 
         public static Arbitrary<Int32> Int() =>
-           Arb.From(GenerateIntegers, CustomIntegerShrinker2);
+           Arb.From(GenerateIntegers, IntegerShrinker);
 
 
         public static IEnumerable<Int32> IntegerShrinker(int current)
