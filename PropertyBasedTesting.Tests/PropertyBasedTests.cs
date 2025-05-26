@@ -1,5 +1,6 @@
 
 using FsCheck;
+using FsCheck.Fluent;
 using FsCheck.Xunit;
 using Xunit.Abstractions;
 using static PropertyBasedTesting.Calculator;
@@ -28,8 +29,7 @@ namespace PropertyBasedTesting.Tests
         [Fact]
         public void WhenIAddTwoRandomNumbersTheResultShouldNotDependOnParameterOrder_2()
         {
-            var config = Configuration.Default;
-            config.MaxNbOfTest = 200;
+            var config = Config.Default.WithMaxTest(200);
 
             var addingTwoRandomNumbers = (int x, int y) => Add(x, y) == Add(y, x);
 

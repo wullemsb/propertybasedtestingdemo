@@ -1,5 +1,6 @@
 
 using FsCheck;
+using FsCheck.Fluent;
 using FsCheck.Xunit;
 using static PropertyBasedTesting.Calculator;
 

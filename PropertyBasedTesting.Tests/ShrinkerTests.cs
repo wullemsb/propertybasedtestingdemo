@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using static PropertyBasedTesting.Calculator;
 using Ploeh.Samples.BookingApi;
 using System.Reflection.Emit;
+using FsCheck.Fluent;
 
 namespace PropertyBasedTesting.Tests
 {

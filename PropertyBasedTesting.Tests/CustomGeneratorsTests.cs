@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using static PropertyBasedTesting.Calculator;
 using Ploeh.Samples.BookingApi;
 using System.Reflection.Emit;
+using FsCheck.Fluent;
 
 namespace PropertyBasedTesting.Tests
 {
@@ -56,10 +57,10 @@ namespace PropertyBasedTesting.Tests
 
 
         private static Gen<Reservation> GenerateReservation =>
-          from d in Arb.Default.DateTime().Generator
-          from e in Arb.Default.NonWhiteSpaceString().Generator
-          from n in Arb.Default.NonWhiteSpaceString().Generator
-          from q in Arb.Default.PositiveInt().Generator
+          from d in ArbMap.Default.GeneratorFor<DateTime>()
+          from e in ArbMap.Default.GeneratorFor<NonWhiteSpaceString>()
+          from n in ArbMap.Default.GeneratorFor<NonWhiteSpaceString>()
+          from q in ArbMap.Default.GeneratorFor<PositiveInt>()
           select new Reservation
           {
               Date = d,
@@ -75,7 +76,7 @@ namespace PropertyBasedTesting.Tests
             return Prop.ForAll((
                 from rs in GenerateReservation.ListOf()
                 from r in GenerateReservation
-                from cs in Arb.Default.NonNegativeInt().Generator
+                from cs in ArbMap.Default.GeneratorFor<NonNegativeInt>()
                 select (rs, r, cs.Item)).ToArbitrary(),
                 x =>
                 {
@@ -96,8 +97,8 @@ namespace PropertyBasedTesting.Tests
         {
             return Prop.ForAll((
                 from r in GenerateReservation
-                from eq in Arb.Default.PositiveInt().Generator
-                from cs in Arb.Default.NonNegativeInt().Generator
+                from eq in ArbMap.Default.GeneratorFor<PositiveInt>()
+                from cs in ArbMap.Default.GeneratorFor<NonNegativeInt>()
                 from rs in GenerateReservation.ListOf()
                 select (r, eq.Item, cs.Item, rs)).ToArbitrary(),
                 x =>

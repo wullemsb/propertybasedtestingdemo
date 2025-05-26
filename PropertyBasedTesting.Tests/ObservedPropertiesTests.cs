@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static PropertyBasedTesting.Calculator;
+using FsCheck.Fluent;
 
 
 namespace PropertyBasedTesting.Tests
