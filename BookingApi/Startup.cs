@@ -9,35 +9,34 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ploeh.Samples.BookingApi
+namespace Ploeh.Samples.BookingApi;
+
+public class Startup
 {
-    public class Startup
+    public IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration)
     {
-        public IConfiguration Configuration { get; }
+        Configuration = configuration;
+    }
 
-        public Startup(IConfiguration configuration)
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddMvc();
+
+        var capacity = Configuration.GetValue<int>("Capacity");
+        var connectionString = Configuration.GetConnectionString("Booking");
+        services.AddSingleton<IControllerActivator>(
+            new CompositionRoot(capacity, connectionString));
+    }
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            Configuration = configuration;
+            app.UseDeveloperExceptionPage();
         }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-
-            var capacity = Configuration.GetValue<int>("Capacity");
-            var connectionString = Configuration.GetConnectionString("Booking");
-            services.AddSingleton<IControllerActivator>(
-                new CompositionRoot(capacity, connectionString));
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseMvc();
-        }
+        app.UseMvc();
     }
 }

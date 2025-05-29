@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ploeh.Samples.BookingApi
+namespace Ploeh.Samples.BookingApi;
+
+public interface IReservationsRepository
 {
-    public interface IReservationsRepository
-    {
-        IEnumerable<Reservation> ReadReservations(DateTime date);
-        int Create(Reservation reservation);
-    }
+    IEnumerable<Reservation> ReadReservations(DateTime date);
+    int Create(Reservation reservation);
 }
