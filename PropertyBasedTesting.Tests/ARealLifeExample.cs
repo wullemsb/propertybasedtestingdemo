@@ -11,22 +11,45 @@ namespace PropertyBasedTesting.Tests;
 
 public class ARealLifeExample
 {
+    [Property]
+    public void CanAcceptWhenCapacityIsSufficient_1(
+    NonNegativeInt capacitySurplus,
+    PositiveInt quantity,
+    PositiveInt[] reservationQantities, DateTime reservationDate)
+    {
+        var date = reservationDate;
+        var reservation = new Reservation
+        {
+            Date = date,
+            Quantity = quantity.Item
+        };
+        var reservedSeats = reservationQantities.Sum(x => x.Item);
+        var capacity = reservedSeats + quantity.Item + capacitySurplus.Item;
+        var sut = new MaîtreD(capacity);
+
+        var reservations =
+            reservationQantities.Select(q => new Reservation { Quantity = q.Item, Date = date });
+        var actual = sut.CanAccept(reservations, reservation);
+
+        Assert.True(actual);
+    }
+
     private static Gen<Reservation> GenerateReservation =>
-      from d in Arb.Default.DateTime().Generator
-      from e in Arb.Default.NonWhiteSpaceString().Generator
-      from n in Arb.Default.NonWhiteSpaceString().Generator
-      from q in Arb.Default.PositiveInt().Generator
-      select new Reservation
-      {
-          Date = d,
-          Email = e.Item,
-          Name = n.Item,
-          Quantity = q.Item
-      };
+  from d in Arb.Default.DateTime().Generator
+  from e in Arb.Default.NonWhiteSpaceString().Generator
+  from n in Arb.Default.NonWhiteSpaceString().Generator
+  from q in Arb.Default.PositiveInt().Generator
+  select new Reservation
+  {
+      Date = d,
+      Email = e.Item,
+      Name = n.Item,
+      Quantity = q.Item
+  };
 
 
     [Property]
-    public Property CanAcceptReturnsReservationInHappyPathScenario()
+    public Property CanAcceptWhenCapacityIsSufficient_2()
     {
         return Prop.ForAll((
             from rs in GenerateReservation.ListOf()
@@ -47,8 +70,49 @@ public class ARealLifeExample
             });
     }
 
+    public static Arbitrary<Reservation> Reservations() =>
+           Arb.From(GenerateReservation);
+
+    [Property(Arbitrary = [typeof(ARealLifeExample)])]
+    public void CanAcceptWhenCapacityIsSufficient_3(IList<Reservation> reservations, Reservation reservation, NonNegativeInt capacitySurplus)
+    {
+        var reservedSeats = reservations.Sum(r => r.Quantity);
+        var capacity =
+            reservation.Quantity + reservedSeats + capacitySurplus.Item;
+        var sut = new MaîtreD(capacity);
+
+        var actual = sut.CanAccept(reservations, reservation);
+
+        Assert.True(actual);
+    }
+
     [Property]
-    public Property CanAcceptOnInsufficientCapacity()
+    public void CanAcceptOnInsufficientCapacity_1(
+    NonNegativeInt capacitySurplus,
+    PositiveInt excessQuantity,
+    PositiveInt[] reservationQantities, DateTime reservationDate)
+    {
+        var date = reservationDate;
+        var reservation = new Reservation
+        {
+            Date = date,
+            Quantity = capacitySurplus.Item + excessQuantity.Item
+        };
+        var reservedSeats = reservationQantities.Sum(x => x.Item);
+        var capacity = reservedSeats + capacitySurplus.Item;
+
+        var sut = new MaîtreD(capacity);
+
+        var reservations =
+           reservationQantities.Select(q => new Reservation { Quantity = q.Item, Date = date });
+
+        var actual = sut.CanAccept(reservations, reservation);
+
+        Assert.False(actual);
+    }
+
+    [Property]
+    public Property CanAcceptOnInsufficientCapacity_2()
     {
         return Prop.ForAll((
             from r in GenerateReservation
@@ -70,6 +134,4 @@ public class ARealLifeExample
                 Assert.False(actual);
             });
     }
-
-
 }
