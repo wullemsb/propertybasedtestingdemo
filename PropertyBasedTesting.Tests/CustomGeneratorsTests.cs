@@ -14,7 +14,7 @@ namespace PropertyBasedTesting.Tests;
 public class CustomGeneratorsTests
 {
     public record CustomDateTime(int Day, int Month, int Year);
-
+   
     private static Gen<CustomDateTime> GenerateDateTime =>
             from day in Gen.Choose(1, 31)
             from month in Gen.Choose(1, 12)

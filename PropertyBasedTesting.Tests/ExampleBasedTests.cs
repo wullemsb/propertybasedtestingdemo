@@ -19,7 +19,7 @@ public class ExampleBasedTests
     [Theory]
     [InlineData(1, 2, 3)]
     [InlineData(1, 0, 1)]
-    //[InlineData(1, 4, 5)]
+    [InlineData(1, 4, 5)]
     public void Add(int input1, int input2, int expectedResult)
     {
         var result = Calculator.Add(input1, input2);
